@@ -2,6 +2,7 @@ class ConsulServiceManager extends ConsulUIManager {
     constructor(resourceURL) {
         super(resourceURL);
         var flags = {};
+        this.current_date_display = $('#currently-displayed-data-date');
         this.mainSelector = new ServiceMainSelector(
             $("#service-title"),
             $("#instances-list"),
@@ -37,9 +38,20 @@ class ConsulServiceManager extends ConsulUIManager {
         this.fetchResource();
     }
 
-    async initResource(data) {
+    async initResource(data, data_date) {
         this.mainSelector.nodes = data["nodes"];
         this.sideSelector.data = data["services"];
+        this.sideSelector.prepareData();
+        this.sideSelector.refreshList();
+        
+        if (data_date > 0) {
+            this.current_date_display.html("Displayed date: " + moment.unix(data_date).format('DD/MM/YYYY HH:mm:ss Z'));
+        }
+    }
+
+  async clean() {
+        this.mainSelector.nodes = {};
+        this.sideSelector.data = {};
         this.sideSelector.prepareData();
         this.sideSelector.refreshList();
     }

@@ -6,8 +6,10 @@ class ConsulUIManager {
     async fetchResource() {
         const response = await fetch(this.resourceURL);
         const result = await response.json();
+        const data_date = await response.headers.get('X-Consul-Snapshot-Timestamp');
+
         this.data = result;
-        await this.initResource(result);
+        await this.initResource(result, data_date);
     }
 
     async initResource(data) {}

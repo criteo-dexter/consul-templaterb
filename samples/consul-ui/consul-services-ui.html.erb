@@ -1,3 +1,6 @@
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
 <% datasource = ENV['SERVICE_DATASOURCE'] || 'consul_services.json'
    # Time to wait before reloading configuration again in seconds (0 = never)
    refresh = ENV['REFRESH'] || '3600' %><%= render_file('common/header.html.erb', title: 'Services') %>
@@ -17,6 +20,43 @@
                 Show Connect Proxies
               </label>
             </div>
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-14">
+                  <div class="form-group">
+                    <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                      <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1"/>
+                      <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-html="true" title="Data returned is the closest available to request" id="currently-displayed-data-date">
+</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <script type="text/javascript">
+                  $(function () {
+                    $('#datetimepicker1').datetimepicker({
+                      format: 'DD/MM/YYYY HH:mm:ss Z',  // default format does not allow to select seconds
+                      sideBySide: true, // display date+time on the same widget
+                      useCurrent: true // by default, select current date
+                    });
+                  });
+                  $("#datetimepicker1").on("change.datetimepicker", function (e) {
+                    console.log("Will fetch data from date " + e.date);
+                    if (e.date) {
+                      console.log("will clean existing data");
+                      consulServiceManager.clean().then(function(result) {
+                        console.log("Will replace data by closest snapshot to " + e.date);
+                        consulServiceManager = new ConsulServiceManager("https://consul-info-timeline-history.par.preprod.crto.in/backup/consul_services/" + e.date / 1000);
+                      });
+                    }
+                  });
+
+                </script>
+              </div>
+            </div>
+
             <div class="input-group">
               <input id="service-filter" type="text" placeholder="filter services by name or tags" class="form-control" />
               <div class="input-group-append">
@@ -61,7 +101,6 @@
     </div>
   <!-- Optional JavaScript -->
   <!-- JavaScript Dependencies: jQuery, Popper.js, Bootstrap JS, Shards JS -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <script src="js/utils.js"></script>
   <script src="js/types.js"></script>
