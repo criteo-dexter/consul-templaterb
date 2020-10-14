@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: consul-templaterb
+  description: Template for Consul services
+  tags:
+    - ruby
+  annotations:
+    backstage.io/techdocs-ref: github:http://github.com/criteo-dexter/consul-templaterb
+    github.com/project-slug: criteo/consul-templaterb
+spec:
+  type: service
+  lifecycle: experimental
+  owner: discovery@criteo.com

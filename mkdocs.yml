@@ -1,0 +1,11 @@
+site_name: 'Consul Template RB'
+
+nav:
+  - README: README.md
+  - CHANGELOG: CHANGELOG.md
+  - INTERNALS: INTERNALS.md
+
+repo_url: http://github.com/criteo-dexter/consul-templaterb
+
+plugins:
+  - techdocs-core
